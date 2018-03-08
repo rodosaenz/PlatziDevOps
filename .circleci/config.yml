@@ -13,10 +13,6 @@ jobs:
       - checkout
       # ... steps for building/testing app ...
       - setup_remote_docker
-      - run:
-          name: Docker Build
-          command: docker build -t platzi .
-
        # Download and cache dependencies
       - restore_cache:
           keys:
@@ -28,24 +24,11 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
+          
       - run:
-          name: Docker Run
-          command: docker run -d -p 3000:300 platzi
+          name: Docker Build
+          command: docker build -t platzi .
 
-    filters:
-      branches:
-        only: /master/
-
-  test:
-    docker:
-    # specify the version you desire here
-      - image: circleci/node:8.1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      # ... steps for building/testing app ...
-      - setup_remote_docker
       - run:
           name: Docker Test
           command: docker run platzi npm test
@@ -53,27 +36,11 @@ jobs:
       - run:
           name: Docker Run
           command: docker run -d -p 3000:300 platzi
-          
-    filters:
-      branches:
-        only: /master/
 
-  deploy:
-    docker:
-    # specify the version you desire here
-      - image: circleci/node:8.1.0
-    working_directory: ~/repo
-    require:
-      - build
-      - test
-    steps:
-      - checkout
-      # ... steps for building/testing app ...
-      - setup_remote_docker
       - run:
           name: Docker Deployment
           command: sh deployments/qa.sh
-          
-    filters:
-      branches:
-        only: /master/
+
+    branches:
+      only: /feature_.*/
+
