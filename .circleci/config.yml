@@ -24,7 +24,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-          
+
       - run:
           name: Docker Build
           command: docker build -t platzi .
@@ -42,5 +42,5 @@ jobs:
           command: sh deployments/qa.sh
 
     branches:
-      only: /feature_.*/
+      only: /master/
 
