@@ -16,24 +16,15 @@ jobs:
       - run:
           name: Docker Build
           command: docker build -t platzi .
-       # Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #      - v1-dependencies-{{ checksum "package.json" }}
-      #      # fallback to using the latest cache if no exact match is found
-      #      - v1-dependencies-
-      #- run: yarn install
-      #- save_cache:
-      #    paths:
-      #      - node_modules
-      #    key: v1-dependencies-{{ checksum "package.json" }}
-
-      # run tests!
-      #- run: yarn test
       - run:
           name: Docker Test
           command: docker run platzi npm test
-
       - run:
           name: Docker Run
           command: docker run -d -p 3000:300 platzi
+      - run:
+          name: Docker Deployment
+          command:  sh deployments/qa.sh
+          filters:
+            branches:
+              only: /feature_.*/
