@@ -10,10 +10,12 @@ jobs:
       - image: circleci/node:8.1.0
     working_directory: ~/repo
     steps:
-      - setup_remote_docker:
-          version:17.09.0-ce
       - checkout
-      - run: docker build -t platzi .
+      # ... steps for building/testing app ...
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+        command: docker build -t platzi .
        # Download and cache dependencies
       - restore_cache:
           keys:
