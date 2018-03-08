@@ -30,6 +30,23 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
+          name: Docker Run
+          command: docker run -d -p 3000:300 platzi
+
+    filters:
+      branches:
+        only: /master/
+
+  test:
+    docker:
+    # specify the version you desire here
+      - image: circleci/node:8.1.0
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # ... steps for building/testing app ...
+      - setup_remote_docker
+      - run:
           name: Docker Test
           command: docker run platzi npm test
 
@@ -37,9 +54,23 @@ jobs:
           name: Docker Run
           command: docker run -d -p 3000:300 platzi
           
+    filters:
+      branches:
+        only: /feature_.*/
+
+  deploy:
+    docker:
+    # specify the version you desire here
+      - image: circleci/node:8.1.0
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # ... steps for building/testing app ...
+      - setup_remote_docker
       - run:
           name: Docker Deployment
-          command:  sh deployments/qa.sh
-          filters:
-            branches:
-              only: /feature_.*/
+          command: sh deployments/qa.sh
+          
+    filters:
+      branches:
+        only: /feature_.*/
