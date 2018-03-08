@@ -56,13 +56,16 @@ jobs:
           
     filters:
       branches:
-        only: /feature_.*/
+        only: /master/
 
   deploy:
     docker:
     # specify the version you desire here
       - image: circleci/node:8.1.0
     working_directory: ~/repo
+    require:
+      - build
+      - test
     steps:
       - checkout
       # ... steps for building/testing app ...
@@ -73,4 +76,4 @@ jobs:
           
     filters:
       branches:
-        only: /feature_.*/
+        only: /master/
